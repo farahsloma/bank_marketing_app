@@ -22,7 +22,7 @@ le_campaign = joblib.load('campaign.pkl')
 le_loan_combo = joblib.load('loan_combo.pkl')
 
 
-def model(): 
+def run_model(): 
     st.title("Bank Marketing Subscription Prediction")
 
     # واجهة المستخدم
@@ -130,7 +130,7 @@ def about():
 
 page = st.sidebar.selectbox("Select page", ["Predict",'plots','About'])
 if page == 'Predict' :
-    model()
+    run_model()
 elif page == 'plots':
     plots()
 elif page == 'About' :
