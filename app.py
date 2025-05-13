@@ -4,6 +4,14 @@ import joblib
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt 
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import GradientBoostingClassifier
+
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('classifier', GradientBoostingClassifier())
+])
 
 
 df = pd.read_csv("data/bank-additional-full.csv" ,sep=';')
