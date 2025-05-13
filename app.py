@@ -53,7 +53,7 @@ def model():
     loan_combo =housing + '_' + loan
 
 
-     input_data = pd.DataFrame([{
+    input_data = pd.DataFrame([{
         'age': age,
         'job': job_mapping[job],
         'marital': marital_mapping[marital],
