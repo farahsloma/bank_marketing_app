@@ -66,11 +66,6 @@ def model():
         'duration_ratio': [duration_ratio],
 
     })
-Index(['age', 'job', 'marital', 'education', 'contact', 'month', 'day_of_week',
-       'campaign', 'poutcome', 'emp.var.rate', 'cons.price.idx',
-       'cons.conf.idx', 'euribor3m', 'nr.employed', 'loan_combo',
-       'duration_ratio'],
-      dtype='object')
     if st.button("Predict"):
         prediction = model.predict(input_data)[0]
         if prediction == 'yes':
