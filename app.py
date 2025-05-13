@@ -7,8 +7,7 @@ import matplotlib.pyplot as plt
 
 
 df = pd.read_csv("data/bank-additional-full.csv" ,sep=';')
-# تحميل النموذج والمحولات
-model = joblib.load('model.pkl')
+model = joblib.load('best_model.pkl')
 le_job = joblib.load('job_encode.pkl')
 le_marital = joblib.load('marital.pkl')
 le_education = joblib.load('education.pkl')
@@ -22,10 +21,10 @@ le_campaign = joblib.load('campaign.pkl')
 le_loan_combo = joblib.load('loan_combo.pkl')
 
 
-def run_model(): 
+def model(): 
     st.title("Bank Marketing Subscription Prediction")
 
-    # واجهة المستخدم
+    
     age = st.number_input("Age", min_value=18, max_value=100, value=30)
     job = st.selectbox("Job", le_job.classes_)
     marital = st.selectbox("Marital Status", le_marital.classes_)
@@ -44,19 +43,15 @@ def run_model():
     euribor3m = st.number_input("Euribor 3 Month Rate", value=4.86)
     nr_employed = st.number_input("Number of Employees", value=5191.0)
     duration = st.number_input("Call Duration (seconds)", min_value=1, value=180)
-    # بناءً على المتوسط من البيانات الأصلية
-    duration_mean = 234.9973171797611 # استبدليه بالقيمة الحقيقية من df['duration'].mean()
+    duration_mean = 234.9973171797611 
     duration_ratio = duration / duration_mean
     loan_combo =housing + '_' + loan
 
-    # تجهيز البيانات للتنبؤ
     input_data = pd.DataFrame({
         'age': [age],
         'job': le_job.transform([job]),
         'marital': le_marital.transform([marital]),
         'education': le_education.transform([education]),
-        'housing': le_housing.transform([housing]),
-        'loan': le_loan.transform([loan]),
         'contact': le_contact.transform([contact]),
         'month': le_month.transform([month]),
         'day_of_week': le_day.transform([day_of_week]),
@@ -71,8 +66,11 @@ def run_model():
         'duration_ratio': [duration_ratio],
 
     })
-
-    # تنبؤ
+Index(['age', 'job', 'marital', 'education', 'contact', 'month', 'day_of_week',
+       'campaign', 'poutcome', 'emp.var.rate', 'cons.price.idx',
+       'cons.conf.idx', 'euribor3m', 'nr.employed', 'loan_combo',
+       'duration_ratio'],
+      dtype='object')
     if st.button("Predict"):
         prediction = model.predict(input_data)[0]
         if prediction == 'yes':
@@ -112,7 +110,7 @@ def about():
 
         **What this app offers:**
         - Display and explore client data
-        - Train and evaluate a LightGBM model
+        - Train and evaluate a GradientBoosting model
         - Predict client response to the marketing campaign
         - Visualize key insights and feature relationships
 
@@ -130,7 +128,7 @@ def about():
 
 page = st.sidebar.selectbox("Select page", ["Predict",'plots','About'])
 if page == 'Predict' :
-    run_model()
+    model()
 elif page == 'plots':
     plots()
 elif page == 'About' :
