@@ -30,7 +30,7 @@ def model():
     st.title("Bank Marketing Subscription Prediction")
 
     
-     age = st.number_input("Age", min_value=18, max_value=100, value=30)
+    age = st.number_input("Age", min_value=18, max_value=100, value=30)
     job = st.selectbox("Job", list(job_mapping.keys()))
     marital = st.selectbox("Marital Status", list(marital_mapping.keys()))
     education = st.selectbox("Education", list(education_mapping.keys()))
