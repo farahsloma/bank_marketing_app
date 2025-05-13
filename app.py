@@ -11,34 +11,36 @@ from sklearn.ensemble import GradientBoostingClassifier
 
 df = pd.read_csv("data/bank-additional-full.csv" ,sep=';')
 model = joblib.load('best_model.pkl')
-le_job = joblib.load('job_encode.pkl')
-le_marital = joblib.load('marital.pkl')
-le_education = joblib.load('education.pkl')
-le_housing = joblib.load('housing.pkl')
-le_loan = joblib.load('loan.pkl')
-le_contact = joblib.load('contact.pkl')
-le_month = joblib.load('month.pkl')
-le_day = joblib.load('day_of_week.pkl')
-le_poutcome = joblib.load('poutcome.pkl')
-le_campaign = joblib.load('campaign.pkl')
-le_loan_combo = joblib.load('loan_combo.pkl')
+def load_mapping(file):
+    with open(file, 'r') as f:
+        return json.load(f)
 
+job_mapping = load_mapping('job_mapping.json')
+marital_mapping = load_mapping('marital_mapping.json')
+education_mapping = load_mapping('education_mapping.json')
+housing_mapping = load_mapping('housing_mapping.json')
+loan_mapping = load_mapping('loan_mapping.json')
+contact_mapping = load_mapping('contact_mapping.json')
+month_mapping = load_mapping('month_mapping.json')
+day_mapping = load_mapping('day_of_week_mapping.json')
+poutcome_mapping = load_mapping('poutcome_mapping.json')
+loan_combo_mapping = load_mapping('loan_combo_mapping.json')
 
 def model(): 
     st.title("Bank Marketing Subscription Prediction")
 
     
-    age = st.number_input("Age", min_value=18, max_value=100, value=30)
-    job = st.selectbox("Job", le_job.classes_)
-    marital = st.selectbox("Marital Status", le_marital.classes_)
-    education = st.selectbox("Education", le_education.classes_)
-    housing = st.selectbox("Housing Loan", le_housing.classes_)
-    loan = st.selectbox("Personal Loan", le_loan.classes_)
-    contact = st.selectbox("Contact Communication Type", le_contact.classes_)
-    month = st.selectbox("Last Contact Month", le_month.classes_)
-    day_of_week = st.selectbox("Day of Week", le_day.classes_)
+     age = st.number_input("Age", min_value=18, max_value=100, value=30)
+    job = st.selectbox("Job", list(job_mapping.keys()))
+    marital = st.selectbox("Marital Status", list(marital_mapping.keys()))
+    education = st.selectbox("Education", list(education_mapping.keys()))
+    housing = st.selectbox("Housing Loan", list(housing_mapping.keys()))
+    loan = st.selectbox("Personal Loan", list(loan_mapping.keys()))
+    contact = st.selectbox("Contact Communication Type", list(contact_mapping.keys()))
+    month = st.selectbox("Last Contact Month", list(month_mapping.keys()))
+    day_of_week = st.selectbox("Day of Week", list(day_mapping.keys()))
     campaign = st.number_input("Number of Contacts During Campaign", min_value=1, value=1)
-    poutcome = st.selectbox("Previous Outcome", le_poutcome.classes_)
+    poutcome = st.selectbox("Previous Outcome", list(poutcome_mapping.keys()))
 
     emp_var_rate = st.number_input("Employment Variation Rate", value=1.1)
     cons_price_idx = st.number_input("Consumer Price Index", value=93.2)
@@ -50,25 +52,25 @@ def model():
     duration_ratio = duration / duration_mean
     loan_combo =housing + '_' + loan
 
-    input_data = pd.DataFrame({
-        'age': [age],
-        'job': le_job.transform([job]),
-        'marital': le_marital.transform([marital]),
-        'education': le_education.transform([education]),
-        'contact': le_contact.transform([contact]),
-        'month': le_month.transform([month]),
-        'day_of_week': le_day.transform([day_of_week]),
-        'campaign': le_campaign.transform([campaign]),
-        'poutcome': le_poutcome.transform([poutcome]),
-        'emp.var.rate': [emp_var_rate],
-        'cons.price.idx': [cons_price_idx],
-        'cons.conf.idx': [cons_conf_idx],
-        'euribor3m': [euribor3m],
-        'nr.employed': [nr_employed],
-        'loan_combo' : le_loan_combo.transform([loan_combo]),
-        'duration_ratio': [duration_ratio],
 
-    })
+     input_data = pd.DataFrame([{
+        'age': age,
+        'job': job_mapping[job],
+        'marital': marital_mapping[marital],
+        'education': education_mapping[education],
+        'contact': contact_mapping[contact],
+        'month': month_mapping[month],
+        'day_of_week': day_mapping[day_of_week],
+        'campaign': campaign,
+        'poutcome': poutcome_mapping[poutcome],
+        'emp.var.rate': emp_var_rate,
+        'cons.price.idx': cons_price_idx,
+        'cons.conf.idx': cons_conf_idx,
+        'euribor3m': euribor3m,
+        'nr.employed': nr_employed,
+        'loan_combo': loan_combo_mapping[loan_combo],
+        'duration_ratio': duration_ratio
+    }])
     if st.button("Predict"):
         prediction = model.predict(input_data)[0]
         if prediction == 'yes':
