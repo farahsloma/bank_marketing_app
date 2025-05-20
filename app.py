@@ -28,7 +28,7 @@ day_mapping = load_mapping('day_of_week_mapping.json')
 poutcome_mapping = load_mapping('poutcome_mapping.json')
 loan_combo_mapping = load_mapping('loan_combo_mapping.json')
 
-def model(): 
+def run_app(): 
     st.title("Bank Marketing Subscription Prediction")
 
     
@@ -130,7 +130,7 @@ def about():
 
 page = st.sidebar.selectbox("Select page", ["Predict",'plots','About'])
 if page == 'Predict' :
-    model()
+    run_app()
 elif page == 'plots':
     plots()
 elif page == 'About' :
